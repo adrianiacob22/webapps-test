@@ -6,7 +6,6 @@ install:
 	@docker build -t loadbalancer -f provisioning/docker/Dockerfile provisioning/docker/
 
 start: 
-	@ansible-playbook -i provisioning/ansible/hosts  provisioning/ansible/main.yaml
 	@docker ps | grep loadbalancer > /dev/null 2>&1 && docker stop loadbalancer || true
 	@vagrant up --provision
 	@docker run -itd --rm --name loadbalancer loadbalancer:latest
