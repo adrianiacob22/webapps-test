@@ -21,10 +21,9 @@
   ansible.builtin.systemd:
     name: httpd
     state: started
-    masked: no
 
-- name: Test nginx status
-  ansible.builtin.command: systemctl stop httpd
+- name: Test httpd service status
+  ansible.builtin.command: systemctl status httpd
   register: httpd_out
 
 - name: Test 

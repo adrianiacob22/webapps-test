@@ -23,9 +23,16 @@ pipeline{
     post{
         always{
             echo "Build has been finished"
+            archiveArtifacts artifacts: '**/*.txt',
+                   allowEmptyArchive: true,
+                   fingerprint: true,
+                   onlyIfSuccessful: false
+            echo "We are sending the archived output to email or publish"
+            sh "cat outfile.txt"
         }
         success{
             echo "========pipeline executed successfully ========"
+
         }
         failure{
             echo "========pipeline execution failed========"

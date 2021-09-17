@@ -1,13 +1,13 @@
 ---
-- hosts: all
+- hosts: web
   remote_user: vagrant
-  become: yes
+  become: true
   roles:
     - role: webservers
       when: '"worker" in ansible_hostname'
 
 - hosts: localhost
   connection: local
-  become: yes
+  become: true
   roles:
     - role: dependencies
