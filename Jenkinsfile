@@ -6,7 +6,7 @@ pipeline{
         stage("Pull code from SCM"){
             steps{
                 git branch: 'master',
-                url: 'ssh://git@github.com:adrianiacob22/webapps-test.git'
+                url: 'https://github.com/adrianiacob22/webapps-test.git'
             }
         }
         stage('Launch the environment'){
