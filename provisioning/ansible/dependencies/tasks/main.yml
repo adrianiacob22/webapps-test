@@ -1,0 +1,71 @@
+---
+- name: Make sure docker related packages are not installed
+  ansible.builtin.yum:
+    name: 
+      - docker 
+      - docker-client 
+      - docker-client-latest 
+      - docker-common 
+      - docker-latest 
+      - docker-latest-logrotate 
+      - docker-logrotate 
+      - docker-engine
+    state: absent
+
+- name: Add docker repository
+  ansible.builtin.yum_repository:
+    name: docker
+    description: Docker CE YUM repo
+    baseurl: https://download.docker.com/linux/centos/$releasever/$basearch/stable
+    enabled: yes
+    gpgcheck: no
+
+- name: Add virtualbox repository
+  ansible.builtin.yum_repository:
+    name: virtualbox
+    description: Oracle vm Virtualbox
+    baseurl: http://download.virtualbox.org/virtualbox/rpm/el/$releasever/$basearch
+    enabled: yes
+    gpgcheck: no
+
+- name: Install dependencies and Virtualbox
+  ansible.builtin.yum:
+    name: 
+      - docker-ce 
+      - docker-ce-cli 
+      - containerd.io
+      - epel-release
+      - gcc 
+      - dkms 
+      - make 
+      - libgomp 
+      - patch
+      - kernel-headers 
+      - kernel-devel 
+      - binutils 
+      - glibc-headers 
+      - glibc-devel 
+      - VirtualBox-6.1
+      - nmap
+    state: present
+
+- name: Get and install Vagrant
+  ansible.builtin.shell: yum -y install https://releases.hashicorp.com/vagrant/2.2.18/vagrant_2.2.18_x86_64.rpm
+
+- name: Enable the Docker daemon in systemd
+  ansible.builtin.systemd:
+    name: docker
+    enabled: yes
+    masked: no
+
+- name: Start the Docker daemon
+  ansible.builtin.systemd:
+    name: docker
+    state: started
+    masked: no
+
+- name: Add user to docker group
+  ansible.builtin.user:
+    name: "{{ ansible_user_id }}"
+    groups: docker
+    state: present

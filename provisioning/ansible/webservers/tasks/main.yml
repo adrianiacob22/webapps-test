@@ -1,0 +1,32 @@
+---
+- name: Install Apache
+  ansible.builtin.yum:
+    name: httpd
+    state: latest
+
+- name: Enable the Apache daemon in systemd
+  ansible.builtin.systemd:
+    name: httpd
+    enabled: yes
+    masked: no
+
+- name: Copy index.html to apache webservers
+  ansible.builtin.copy:
+    src: files/index.html
+    dest: /var/www/html/
+    owner: apache
+    group: apache
+
+- name: Start the Apache daemon
+  ansible.builtin.systemd:
+    name: httpd
+    state: started
+    masked: no
+
+- name: Test nginx status
+  ansible.builtin.command: systemctl stop httpd
+  register: httpd_out
+
+- name: Test 
+  assert:
+    that: httpd_out.failed == false
