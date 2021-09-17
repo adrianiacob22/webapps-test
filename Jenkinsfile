@@ -3,26 +3,26 @@ pipeline{
         label "centos"
     }
     stages{
-        stage("Build nginx docker image"){
+        stage("Pull code from SCM"){
             steps{
-                echo "========executing A========"
+                git branch: 'master',
+                url: 'ssh://git@github.com:adrianiacob22/webapps-test.git'
             }
-            post{
-                always{
-                    echo "========always========"
-                }
-                success{
-                    echo "========A executed successfully========"
-                }
-                failure{
-                    echo "========A execution failed========"
-                }
+        }
+        stage('Launch the environment'){
+            steps{
+                sh "make install && make start"
+            }
+        }
+        stage('Test if environment is ready'){
+            steps{
+                sh "./test_env.sh"
             }
         }
     }
     post{
         always{
-            echo "========always========"
+            echo "Build has been finished"
         }
         success{
             echo "========pipeline executed successfully ========"
