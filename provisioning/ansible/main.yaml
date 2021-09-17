@@ -1,10 +1,11 @@
 ---
-- hosts: web
+- hosts: all
   remote_user: vagrant
+  gather_facts: no
   become: true
   roles:
     - role: webservers
-      when: '"worker" in ansible_hostname'
+      when: '"worker" in inventory_hostname'
 
 - hosts: localhost
   connection: local
